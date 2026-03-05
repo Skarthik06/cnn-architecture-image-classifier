@@ -1,0 +1,308 @@
+EXPERIMENT VERSION: V3 Transfer Learning (MobileNetV2)
+Base Model: MobileNetV2 pretrained on ImageNet
+Trainable Layers: Top classifier only (feature extraction phase)
+Image Size: 128x128
+Epochs: 10
+Optimizer: Adam (lr=0.0001)
+Purpose: Improve accuracy using pretrained deep features
+
+
+
+
+(venv) PS D:\SK\dog_cat_cnn_project\src> python train_v3.py
+2026-02-05 22:36:06.369491: I tensorflow/core/util/port.cc:153] oneDNN custom operations are on. You may see slightly different numerical results due to floating-point round-off errors from different computation orders. To turn them off, set the environment variable `TF_ENABLE_ONEDNN_OPTS=0`.
+2026-02-05 22:36:08.308843: I tensorflow/core/util/port.cc:153] oneDNN custom operations are on. You may see slightly different numerical results due to floating-point round-off errors from different computation orders. To turn them off, set the environment variable `TF_ENABLE_ONEDNN_OPTS=0`.
+📂 Loading datasets...
+📂 Loading training data from: D:\SK\dog_cat_cnn_project\dataset\train
+Found 19998 files belonging to 2 classes.
+2026-02-05 22:36:10.210729: I tensorflow/core/platform/cpu_feature_guard.cc:210] This TensorFlow binary is optimized to use available CPU instructions in performance-critical operations.
+To enable the following instructions: SSE3 SSE4.1 SSE4.2 AVX AVX2 AVX_VNNI FMA, in other operations, rebuild TensorFlow with the appropriate compiler flags.
+WARNING:tensorflow:From D:\SK\dog_cat_cnn_project\src\data_loader.py:23: ignore_errors (from tensorflow.python.data.experimental.ops.error_ops) is deprecated and will be removed in a future version.
+Instructions for updating:
+Use `tf.data.Dataset.ignore_errors` instead.
+📂 Loading validation data from: D:\SK\dog_cat_cnn_project\dataset\validation
+Found 5000 files belonging to 2 classes.
+🧠 Building V3 Transfer Learning Model (MobileNetV2)...
+Downloading data from https://storage.googleapis.com/tensorflow/keras-applications/mobilenet_v2/mobilenet_v2_weights_tf_dim_ordering_tf_kernels_1.0_128_no_top.h5
+9406464/9406464 ━━━━━━━━━━━━━━━━━━━━ 20s 2us/step
+Model: "sequential"
+┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━┓
+┃ Layer (type)                         ┃ Output Shape                ┃         Param # ┃
+┡━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━┩
+│ rescaling (Rescaling)                │ (None, 128, 128, 3)         │               0 │
+├──────────────────────────────────────┼─────────────────────────────┼─────────────────┤
+│ mobilenetv2_1.00_128 (Functional)    │ (None, 4, 4, 1280)          │       2,257,984 │
+├──────────────────────────────────────┼─────────────────────────────┼─────────────────┤
+│ global_average_pooling2d             │ (None, 1280)                │               0 │
+│ (GlobalAveragePooling2D)             │                             │                 │
+├──────────────────────────────────────┼─────────────────────────────┼─────────────────┤
+│ dropout (Dropout)                    │ (None, 1280)                │               0 │
+├──────────────────────────────────────┼─────────────────────────────┼─────────────────┤
+│ dense (Dense)                        │ (None, 128)                 │         163,968 │
+├──────────────────────────────────────┼─────────────────────────────┼─────────────────┤
+│ dropout_1 (Dropout)                  │ (None, 128)                 │               0 │
+├──────────────────────────────────────┼─────────────────────────────┼─────────────────┤
+│ dense_1 (Dense)                      │ (None, 2)                   │             258 │
+└──────────────────────────────────────┴─────────────────────────────┴─────────────────┘
+ Total params: 2,422,210 (9.24 MB)
+ Trainable params: 164,226 (641.51 KB)
+ Non-trainable params: 2,257,984 (8.61 MB)
+🚀 Training V3 model (Feature Extraction Phase)...
+Epoch 1/10
+     42/Unknown 6s 71ms/step - accuracy: 0.6467 - loss: 0.7308Corrupt JPEG data: 214 extraneous bytes before marker 0xd9
+    155/Unknown 14s 70ms/step - accuracy: 0.7614 - loss: 0.5227Corrupt JPEG data: 239 extraneous bytes before marker 0xd9
+    227/Unknown 19s 70ms/step - accuracy: 0.7928 - loss: 0.4637Corrupt JPEG data: 65 extraneous bytes before marker 0xd9
+    233/Unknown 19s 70ms/step - accuracy: 0.7949 - loss: 0.4598Corrupt JPEG data: 1403 extraneous bytes before marker 0xd9
+    245/Unknown 20s 70ms/step - accuracy: 0.7988 - loss: 0.4524Corrupt JPEG data: 228 extraneous bytes before marker 0xd9
+    421/Unknown 33s 71ms/step - accuracy: 0.8373 - loss: 0.3766Corrupt JPEG data: 99 extraneous bytes before marker 0xd9
+    548/Unknown 42s 71ms/step - accuracy: 0.8535 - loss: 0.3437Corrupt JPEG data: 162 extraneous bytes before marker 0xd9
+    550/Unknown 42s 71ms/step - accuracy: 0.8537 - loss: 0.3432Corrupt JPEG data: 1153 extraneous bytes before marker 0xd9
+    620/Unknown 47s 71ms/step - accuracy: 0.8605 - loss: 0.32932026-02-05 22:37:20.801578: I tensorflow/core/framework/local_rendezvous.cc:407] Local rendezvous is aborting with status: OUT_OF_RANGE: End of sequence
+         [[{{node IteratorGetNext}}]]
+D:\SK\dog_cat_cnn_project\venv\Lib\site-packages\keras\src\trainers\epoch_iterator.py:164: UserWarning: Your input ran out of data; interrupting training. Make sure that your dataset or generator can generate at least `steps_per_epoch * epochs` batches. You may need to use the `.repeat()` function when building your dataset.
+  self._interrupted_warning()
+Corrupt JPEG data: 128 extraneous bytes before marker 0xd9
+Corrupt JPEG data: 252 extraneous bytes before marker 0xd9
+Warning: unknown JFIF revision number 0.00
+Corrupt JPEG data: 2226 extraneous bytes before marker 0xd9
+Corrupt JPEG data: 396 extraneous bytes before marker 0xd9
+2026-02-05 22:37:32.490756: I tensorflow/core/framework/local_rendezvous.cc:407] Local rendezvous is aborting with status: OUT_OF_RANGE: End of sequence
+         [[{{node IteratorGetNext}}]]
+620/620 ━━━━━━━━━━━━━━━━━━━━ 59s 90ms/step - accuracy: 0.9156 - loss: 0.2149 - val_accuracy: 0.9674 - val_loss: 0.0843
+Epoch 2/10
+620/620 ━━━━━━━━━━━━━━━━━━━━ 0s 60ms/step - accuracy: 0.9550 - loss: 0.12622026-02-05 22:38:19.427448: I tensorflow/core/framework/local_rendezvous.cc:407] Local rendezvous is aborting with status: OUT_OF_RANGE: End of sequence
+         [[{{node IteratorGetNext}}]]
+620/620 ━━━━━━━━━━━━━━━━━━━━ 47s 76ms/step - accuracy: 0.9535 - loss: 0.1241 - val_accuracy: 0.9688 - val_loss: 0.0795
+Epoch 3/10
+620/620 ━━━━━━━━━━━━━━━━━━━━ 49s 79ms/step - accuracy: 0.9560 - loss: 0.1110 - val_accuracy: 0.9704 - val_loss: 0.0793
+Epoch 4/10
+620/620 ━━━━━━━━━━━━━━━━━━━━ 0s 63ms/step - accuracy: 0.9612 - loss: 0.10182026-02-05 22:40:05.048496: I tensorflow/core/framework/local_rendezvous.cc:407] Local rendezvous is aborting with status: OUT_OF_RANGE: End of sequence
+         [[{{node IteratorGetNext}}]]
+620/620 ━━━━━━━━━━━━━━━━━━━━ 57s 91ms/step - accuracy: 0.9600 - loss: 0.1019 - val_accuracy: 0.9710 - val_loss: 0.0764
+Epoch 5/10
+620/620 ━━━━━━━━━━━━━━━━━━━━ 59s 94ms/step - accuracy: 0.9611 - loss: 0.1000 - val_accuracy: 0.9704 - val_loss: 0.0798
+Epoch 6/10
+620/620 ━━━━━━━━━━━━━━━━━━━━ 48s 78ms/step - accuracy: 0.9636 - loss: 0.0930 - val_accuracy: 0.9706 - val_loss: 0.0773
+Epoch 7/10
+620/620 ━━━━━━━━━━━━━━━━━━━━ 49s 78ms/step - accuracy: 0.9645 - loss: 0.0913 - val_accuracy: 0.9718 - val_loss: 0.0754
+Epoch 8/10
+620/620 ━━━━━━━━━━━━━━━━━━━━ 0s 63ms/step - accuracy: 0.9678 - loss: 0.08642026-02-05 22:43:34.520825: I tensorflow/core/framework/local_rendezvous.cc:407] Local rendezvous is aborting with status: OUT_OF_RANGE: End of sequence
+         [[{{node IteratorGetNext}}]]
+620/620 ━━━━━━━━━━━━━━━━━━━━ 54s 87ms/step - accuracy: 0.9656 - loss: 0.0890 - val_accuracy: 0.9708 - val_loss: 0.0762
+Epoch 9/10
+620/620 ━━━━━━━━━━━━━━━━━━━━ 130s 210ms/step - accuracy: 0.9668 - loss: 0.0838 - val_accuracy: 0.9722 - val_loss: 0.0722
+Epoch 10/10
+620/620 ━━━━━━━━━━━━━━━━━━━━ 45s 73ms/step - accuracy: 0.9674 - loss: 0.0837 - val_accuracy: 0.9702 - val_loss: 0.0743
+✅ V3 model saved!
+📊 Accuracy graph saved!
+📉 Loss graph saved!
+📝 Experiment notes saved!
+
+🎉 V3 Training Complete!
+(venv) PS D:\SK\dog_cat_cnn_project\src> python evaluate_v3.py
+2026-02-05 22:48:17.042635: I tensorflow/core/util/port.cc:153] oneDNN custom operations are on. You may see slightly different numerical results due to floating-point round-off errors from different computation orders. To turn them off, set the environment variable `TF_ENABLE_ONEDNN_OPTS=0`.
+2026-02-05 22:48:21.966255: I tensorflow/core/util/port.cc:153] oneDNN custom operations are on. You may see slightly different numerical results due to floating-point round-off errors from different computation orders. To turn them off, set the environment variable `TF_ENABLE_ONEDNN_OPTS=0`.
+📦 Loading V3 Transfer Learning model...
+2026-02-05 22:48:24.678030: I tensorflow/core/platform/cpu_feature_guard.cc:210] This TensorFlow binary is optimized to use available CPU instructions in performance-critical operations.
+To enable the following instructions: SSE3 SSE4.1 SSE4.2 AVX AVX2 AVX_VNNI FMA, in other operations, rebuild TensorFlow with the appropriate compiler flags.
+📂 Loading validation data...
+📂 Loading validation data from: D:\SK\dog_cat_cnn_project\dataset\validation
+Found 5000 files belonging to 2 classes.
+WARNING:tensorflow:From D:\SK\dog_cat_cnn_project\src\data_loader.py:23: ignore_errors (from tensorflow.python.data.experimental.ops.error_ops) is deprecated and will be removed in a future version.
+Instructions for updating:
+Use `tf.data.Dataset.ignore_errors` instead.
+🔍 Running predictions on validation set...
+1/1 ━━━━━━━━━━━━━━━━━━━━ 1s 697ms/step
+1/1 ━━━━━━━━━━━━━━━━━━━━ 0s 143ms/step
+1/1 ━━━━━━━━━━━━━━━━━━━━ 0s 149ms/step
+1/1 ━━━━━━━━━━━━━━━━━━━━ 0s 173ms/step
+1/1 ━━━━━━━━━━━━━━━━━━━━ 0s 122ms/step
+1/1 ━━━━━━━━━━━━━━━━━━━━ 0s 130ms/step
+1/1 ━━━━━━━━━━━━━━━━━━━━ 0s 123ms/step
+1/1 ━━━━━━━━━━━━━━━━━━━━ 0s 100ms/step
+1/1 ━━━━━━━━━━━━━━━━━━━━ 0s 137ms/step
+1/1 ━━━━━━━━━━━━━━━━━━━━ 0s 140ms/step
+1/1 ━━━━━━━━━━━━━━━━━━━━ 0s 160ms/step
+1/1 ━━━━━━━━━━━━━━━━━━━━ 0s 107ms/step
+1/1 ━━━━━━━━━━━━━━━━━━━━ 0s 126ms/step
+1/1 ━━━━━━━━━━━━━━━━━━━━ 0s 132ms/step
+1/1 ━━━━━━━━━━━━━━━━━━━━ 0s 120ms/step
+1/1 ━━━━━━━━━━━━━━━━━━━━ 0s 110ms/step
+1/1 ━━━━━━━━━━━━━━━━━━━━ 0s 120ms/step
+1/1 ━━━━━━━━━━━━━━━━━━━━ 0s 122ms/step
+1/1 ━━━━━━━━━━━━━━━━━━━━ 0s 164ms/step
+1/1 ━━━━━━━━━━━━━━━━━━━━ 0s 112ms/step
+1/1 ━━━━━━━━━━━━━━━━━━━━ 0s 91ms/step
+1/1 ━━━━━━━━━━━━━━━━━━━━ 0s 119ms/step
+1/1 ━━━━━━━━━━━━━━━━━━━━ 0s 100ms/step
+1/1 ━━━━━━━━━━━━━━━━━━━━ 0s 158ms/step
+Corrupt JPEG data: 128 extraneous bytes before marker 0xd9
+1/1 ━━━━━━━━━━━━━━━━━━━━ 0s 166ms/step
+1/1 ━━━━━━━━━━━━━━━━━━━━ 0s 116ms/step
+1/1 ━━━━━━━━━━━━━━━━━━━━ 0s 144ms/step
+1/1 ━━━━━━━━━━━━━━━━━━━━ 0s 149ms/step
+1/1 ━━━━━━━━━━━━━━━━━━━━ 0s 136ms/step
+1/1 ━━━━━━━━━━━━━━━━━━━━ 0s 111ms/step
+1/1 ━━━━━━━━━━━━━━━━━━━━ 0s 150ms/step
+1/1 ━━━━━━━━━━━━━━━━━━━━ 0s 126ms/step
+1/1 ━━━━━━━━━━━━━━━━━━━━ 0s 105ms/step
+1/1 ━━━━━━━━━━━━━━━━━━━━ 0s 120ms/step
+1/1 ━━━━━━━━━━━━━━━━━━━━ 0s 159ms/step
+1/1 ━━━━━━━━━━━━━━━━━━━━ 0s 153ms/step
+1/1 ━━━━━━━━━━━━━━━━━━━━ 0s 104ms/step
+1/1 ━━━━━━━━━━━━━━━━━━━━ 0s 112ms/step
+1/1 ━━━━━━━━━━━━━━━━━━━━ 0s 134ms/step
+1/1 ━━━━━━━━━━━━━━━━━━━━ 0s 135ms/step
+1/1 ━━━━━━━━━━━━━━━━━━━━ 0s 146ms/step
+1/1 ━━━━━━━━━━━━━━━━━━━━ 0s 129ms/step
+Warning: unknown JFIF revision number 0.00
+1/1 ━━━━━━━━━━━━━━━━━━━━ 0s 144ms/step
+1/1 ━━━━━━━━━━━━━━━━━━━━ 0s 127ms/step
+1/1 ━━━━━━━━━━━━━━━━━━━━ 0s 122ms/step
+1/1 ━━━━━━━━━━━━━━━━━━━━ 0s 124ms/step
+1/1 ━━━━━━━━━━━━━━━━━━━━ 0s 130ms/step
+1/1 ━━━━━━━━━━━━━━━━━━━━ 0s 132ms/step
+1/1 ━━━━━━━━━━━━━━━━━━━━ 0s 92ms/step
+1/1 ━━━━━━━━━━━━━━━━━━━━ 0s 90ms/step
+1/1 ━━━━━━━━━━━━━━━━━━━━ 0s 102ms/step
+1/1 ━━━━━━━━━━━━━━━━━━━━ 0s 100ms/step
+1/1 ━━━━━━━━━━━━━━━━━━━━ 0s 135ms/step
+1/1 ━━━━━━━━━━━━━━━━━━━━ 0s 172ms/step
+1/1 ━━━━━━━━━━━━━━━━━━━━ 0s 136ms/step
+1/1 ━━━━━━━━━━━━━━━━━━━━ 0s 145ms/step
+1/1 ━━━━━━━━━━━━━━━━━━━━ 0s 105ms/step
+1/1 ━━━━━━━━━━━━━━━━━━━━ 0s 115ms/step
+1/1 ━━━━━━━━━━━━━━━━━━━━ 0s 164ms/step
+1/1 ━━━━━━━━━━━━━━━━━━━━ 0s 140ms/step
+1/1 ━━━━━━━━━━━━━━━━━━━━ 0s 147ms/step
+1/1 ━━━━━━━━━━━━━━━━━━━━ 0s 131ms/step
+1/1 ━━━━━━━━━━━━━━━━━━━━ 0s 128ms/step
+1/1 ━━━━━━━━━━━━━━━━━━━━ 0s 114ms/step
+1/1 ━━━━━━━━━━━━━━━━━━━━ 0s 110ms/step
+1/1 ━━━━━━━━━━━━━━━━━━━━ 0s 106ms/step
+1/1 ━━━━━━━━━━━━━━━━━━━━ 0s 133ms/step
+Corrupt JPEG data: 396 extraneous bytes before marker 0xd9
+1/1 ━━━━━━━━━━━━━━━━━━━━ 0s 145ms/step
+1/1 ━━━━━━━━━━━━━━━━━━━━ 0s 129ms/step
+1/1 ━━━━━━━━━━━━━━━━━━━━ 0s 125ms/step
+1/1 ━━━━━━━━━━━━━━━━━━━━ 0s 143ms/step
+1/1 ━━━━━━━━━━━━━━━━━━━━ 0s 119ms/step
+1/1 ━━━━━━━━━━━━━━━━━━━━ 0s 112ms/step
+1/1 ━━━━━━━━━━━━━━━━━━━━ 0s 93ms/step
+1/1 ━━━━━━━━━━━━━━━━━━━━ 0s 131ms/step
+1/1 ━━━━━━━━━━━━━━━━━━━━ 0s 132ms/step
+1/1 ━━━━━━━━━━━━━━━━━━━━ 0s 118ms/step
+1/1 ━━━━━━━━━━━━━━━━━━━━ 0s 133ms/step
+Corrupt JPEG data: 252 extraneous bytes before marker 0xd9
+1/1 ━━━━━━━━━━━━━━━━━━━━ 0s 114ms/step
+1/1 ━━━━━━━━━━━━━━━━━━━━ 0s 134ms/step
+1/1 ━━━━━━━━━━━━━━━━━━━━ 0s 149ms/step
+1/1 ━━━━━━━━━━━━━━━━━━━━ 0s 160ms/step
+1/1 ━━━━━━━━━━━━━━━━━━━━ 0s 142ms/step
+1/1 ━━━━━━━━━━━━━━━━━━━━ 0s 179ms/step
+1/1 ━━━━━━━━━━━━━━━━━━━━ 0s 124ms/step
+1/1 ━━━━━━━━━━━━━━━━━━━━ 0s 115ms/step
+1/1 ━━━━━━━━━━━━━━━━━━━━ 0s 161ms/step
+1/1 ━━━━━━━━━━━━━━━━━━━━ 0s 119ms/step
+1/1 ━━━━━━━━━━━━━━━━━━━━ 0s 162ms/step
+1/1 ━━━━━━━━━━━━━━━━━━━━ 0s 171ms/step
+1/1 ━━━━━━━━━━━━━━━━━━━━ 0s 153ms/step
+1/1 ━━━━━━━━━━━━━━━━━━━━ 0s 115ms/step
+1/1 ━━━━━━━━━━━━━━━━━━━━ 0s 95ms/step
+1/1 ━━━━━━━━━━━━━━━━━━━━ 0s 102ms/step
+1/1 ━━━━━━━━━━━━━━━━━━━━ 0s 118ms/step
+1/1 ━━━━━━━━━━━━━━━━━━━━ 0s 112ms/step
+1/1 ━━━━━━━━━━━━━━━━━━━━ 0s 96ms/step
+1/1 ━━━━━━━━━━━━━━━━━━━━ 0s 160ms/step
+1/1 ━━━━━━━━━━━━━━━━━━━━ 0s 108ms/step
+1/1 ━━━━━━━━━━━━━━━━━━━━ 0s 148ms/step
+1/1 ━━━━━━━━━━━━━━━━━━━━ 0s 123ms/step
+Corrupt JPEG data: 2226 extraneous bytes before marker 0xd9
+1/1 ━━━━━━━━━━━━━━━━━━━━ 0s 101ms/step
+1/1 ━━━━━━━━━━━━━━━━━━━━ 0s 151ms/step
+1/1 ━━━━━━━━━━━━━━━━━━━━ 0s 105ms/step
+1/1 ━━━━━━━━━━━━━━━━━━━━ 0s 174ms/step
+1/1 ━━━━━━━━━━━━━━━━━━━━ 0s 103ms/step
+1/1 ━━━━━━━━━━━━━━━━━━━━ 0s 143ms/step
+1/1 ━━━━━━━━━━━━━━━━━━━━ 0s 158ms/step
+1/1 ━━━━━━━━━━━━━━━━━━━━ 0s 115ms/step
+1/1 ━━━━━━━━━━━━━━━━━━━━ 0s 130ms/step
+1/1 ━━━━━━━━━━━━━━━━━━━━ 0s 130ms/step
+1/1 ━━━━━━━━━━━━━━━━━━━━ 0s 155ms/step
+1/1 ━━━━━━━━━━━━━━━━━━━━ 0s 119ms/step
+1/1 ━━━━━━━━━━━━━━━━━━━━ 0s 110ms/step
+1/1 ━━━━━━━━━━━━━━━━━━━━ 0s 95ms/step
+1/1 ━━━━━━━━━━━━━━━━━━━━ 0s 189ms/step
+1/1 ━━━━━━━━━━━━━━━━━━━━ 0s 120ms/step
+1/1 ━━━━━━━━━━━━━━━━━━━━ 0s 110ms/step
+1/1 ━━━━━━━━━━━━━━━━━━━━ 0s 120ms/step
+1/1 ━━━━━━━━━━━━━━━━━━━━ 0s 198ms/step
+1/1 ━━━━━━━━━━━━━━━━━━━━ 0s 135ms/step
+1/1 ━━━━━━━━━━━━━━━━━━━━ 0s 135ms/step
+1/1 ━━━━━━━━━━━━━━━━━━━━ 0s 145ms/step
+1/1 ━━━━━━━━━━━━━━━━━━━━ 0s 105ms/step
+1/1 ━━━━━━━━━━━━━━━━━━━━ 0s 180ms/step
+1/1 ━━━━━━━━━━━━━━━━━━━━ 0s 153ms/step
+1/1 ━━━━━━━━━━━━━━━━━━━━ 0s 145ms/step
+1/1 ━━━━━━━━━━━━━━━━━━━━ 0s 150ms/step
+1/1 ━━━━━━━━━━━━━━━━━━━━ 0s 143ms/step
+1/1 ━━━━━━━━━━━━━━━━━━━━ 0s 172ms/step
+1/1 ━━━━━━━━━━━━━━━━━━━━ 0s 124ms/step
+1/1 ━━━━━━━━━━━━━━━━━━━━ 0s 157ms/step
+1/1 ━━━━━━━━━━━━━━━━━━━━ 0s 203ms/step
+1/1 ━━━━━━━━━━━━━━━━━━━━ 0s 110ms/step
+1/1 ━━━━━━━━━━━━━━━━━━━━ 0s 100ms/step
+1/1 ━━━━━━━━━━━━━━━━━━━━ 0s 126ms/step
+1/1 ━━━━━━━━━━━━━━━━━━━━ 0s 118ms/step
+1/1 ━━━━━━━━━━━━━━━━━━━━ 0s 131ms/step
+1/1 ━━━━━━━━━━━━━━━━━━━━ 0s 190ms/step
+1/1 ━━━━━━━━━━━━━━━━━━━━ 0s 96ms/step
+1/1 ━━━━━━━━━━━━━━━━━━━━ 0s 155ms/step
+1/1 ━━━━━━━━━━━━━━━━━━━━ 0s 140ms/step
+1/1 ━━━━━━━━━━━━━━━━━━━━ 0s 171ms/step
+1/1 ━━━━━━━━━━━━━━━━━━━━ 0s 150ms/step
+1/1 ━━━━━━━━━━━━━━━━━━━━ 0s 157ms/step
+1/1 ━━━━━━━━━━━━━━━━━━━━ 0s 142ms/step
+1/1 ━━━━━━━━━━━━━━━━━━━━ 0s 153ms/step
+1/1 ━━━━━━━━━━━━━━━━━━━━ 0s 129ms/step
+1/1 ━━━━━━━━━━━━━━━━━━━━ 0s 121ms/step
+1/1 ━━━━━━━━━━━━━━━━━━━━ 0s 160ms/step
+1/1 ━━━━━━━━━━━━━━━━━━━━ 0s 149ms/step
+1/1 ━━━━━━━━━━━━━━━━━━━━ 0s 119ms/step
+1/1 ━━━━━━━━━━━━━━━━━━━━ 0s 145ms/step
+1/1 ━━━━━━━━━━━━━━━━━━━━ 0s 139ms/step
+1/1 ━━━━━━━━━━━━━━━━━━━━ 1s 861ms/step
+2026-02-05 22:48:53.512677: I tensorflow/core/framework/local_rendezvous.cc:407] Local rendezvous is aborting with status: OUT_OF_RANGE: End of sequence
+🧩 Confusion matrix saved!
+📄 Classification report saved!
+📈 Metrics saved!
+
+✅ V3 Evaluation Complete!
+
+📊 Key Metrics (From Your Output)
+
+Validation Accuracy: 97.0–97.2%
+
+Training Accuracy: ~96.7%
+
+Validation Loss: ~0.07–0.08
+
+Confusion Matrix:
+
+Cat → Correct: 2423
+
+Dog → Correct: 2366
+
+Total errors: 147 out of ~4936 (~3%)
+
+❓ Why not stop at V2?
+
+“V2 reduced overfitting but lacked semantic feature understanding. Transfer learning introduced pretrained visual intelligence, leading to higher accuracy.”
+
+❓ Why MobileNetV2?
+
+“MobileNetV2 is lightweight, fast, and optimized for embedded systems while maintaining high accuracy.”
+
+❓ Why freeze layers?
+
+“Freezing prevents catastrophic forgetting of learned features and improves generalization on small datasets.”

@@ -1,0 +1,423 @@
+EXPERIMENT VERSION: V1 BASELINE CNN
+Model: Custom Advanced CNN with SeparableConv + BatchNorm
+Image Size: 128x128
+Batch Size: 32
+Epochs: 10
+Optimizer: Adam
+Loss: SparseCategoricalCrossentropy
+Purpose: Establish baseline performance before augmentation or transfer learning.
+
+
+(venv) PS D:\SK\dog_cat_cnn_project> cd src 
+(venv) PS D:\SK\dog_cat_cnn_project\src> python train.py
+2026-02-05 21:20:40.864723: I tensorflow/core/util/port.cc:153] oneDNN custom operations are on. You may see slightly different numerical results due to floating-point round-off errors from different computation orders. To turn them off, set the environment variable `TF_ENABLE_ONEDNN_OPTS=0`.
+2026-02-05 21:20:43.295109: I tensorflow/core/util/port.cc:153] oneDNN custom operations are on. You may see slightly different numerical results due to floating-point round-off errors from different computation orders. To turn them off, set the environment variable `TF_ENABLE_ONEDNN_OPTS=0`.
+📂 Loading datasets...
+Found 19998 files belonging to 2 classes.
+2026-02-05 21:20:45.063522: I tensorflow/core/platform/cpu_feature_guard.cc:210] This TensorFlow binary is optimized to use available CPU instructions in performance-critical operations.
+To enable the following instructions: SSE3 SSE4.1 SSE4.2 AVX AVX2 AVX_VNNI FMA, in other operations, rebuild TensorFlow with the appropriate compiler flags.      
+Found 5000 files belonging to 2 classes.
+WARNING:tensorflow:From D:\SK\dog_cat_cnn_project\src\data_loader.py:22: ignore_errors (from tensorflow.python.data.experimental.ops.error_ops) is deprecated and will be removed in a future version.
+Instructions for updating:
+Use `tf.data.Dataset.ignore_errors` instead.
+🧠 Building V1 Advanced CNN model...
+Model: "sequential"
+┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━┓
+┃ Layer (type)                         ┃ Output Shape                ┃         Param # ┃
+┡━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━┩
+│ conv2d (Conv2D)                      │ (None, 128, 128, 32)        │             896 │
+├──────────────────────────────────────┼─────────────────────────────┼─────────────────┤
+│ batch_normalization                  │ (None, 128, 128, 32)        │             128 │
+│ (BatchNormalization)                 │                             │                 │
+├──────────────────────────────────────┼─────────────────────────────┼─────────────────┤
+│ max_pooling2d (MaxPooling2D)         │ (None, 64, 64, 32)          │               0 │
+├──────────────────────────────────────┼─────────────────────────────┼─────────────────┤
+│ separable_conv2d (SeparableConv2D)   │ (None, 64, 64, 64)          │           2,400 │
+├──────────────────────────────────────┼─────────────────────────────┼─────────────────┤
+│ batch_normalization_1                │ (None, 64, 64, 64)          │             256 │
+│ (BatchNormalization)                 │                             │                 │
+├──────────────────────────────────────┼─────────────────────────────┼─────────────────┤
+│ max_pooling2d_1 (MaxPooling2D)       │ (None, 32, 32, 64)          │               0 │
+├──────────────────────────────────────┼─────────────────────────────┼─────────────────┤
+│ separable_conv2d_1 (SeparableConv2D) │ (None, 32, 32, 128)         │           8,896 │
+├──────────────────────────────────────┼─────────────────────────────┼─────────────────┤
+│ batch_normalization_2                │ (None, 32, 32, 128)         │             512 │
+│ (BatchNormalization)                 │                             │                 │
+├──────────────────────────────────────┼─────────────────────────────┼─────────────────┤
+│ max_pooling2d_2 (MaxPooling2D)       │ (None, 16, 16, 128)         │               0 │
+├──────────────────────────────────────┼─────────────────────────────┼─────────────────┤
+│ separable_conv2d_2 (SeparableConv2D) │ (None, 16, 16, 256)         │          34,176 │
+├──────────────────────────────────────┼─────────────────────────────┼─────────────────┤
+│ batch_normalization_3                │ (None, 16, 16, 256)         │           1,024 │
+│ (BatchNormalization)                 │                             │                 │
+├──────────────────────────────────────┼─────────────────────────────┼─────────────────┤
+│ max_pooling2d_3 (MaxPooling2D)       │ (None, 8, 8, 256)           │               0 │
+├──────────────────────────────────────┼─────────────────────────────┼─────────────────┤
+│ global_average_pooling2d             │ (None, 256)                 │               0 │
+│ (GlobalAveragePooling2D)             │                             │                 │
+├──────────────────────────────────────┼─────────────────────────────┼─────────────────┤
+│ dropout (Dropout)                    │ (None, 256)                 │               0 │
+├──────────────────────────────────────┼─────────────────────────────┼─────────────────┤
+│ dense (Dense)                        │ (None, 128)                 │          32,896 │
+├──────────────────────────────────────┼─────────────────────────────┼─────────────────┤
+│ dropout_1 (Dropout)                  │ (None, 128)                 │               0 │
+├──────────────────────────────────────┼─────────────────────────────┼─────────────────┤
+│ dense_1 (Dense)                      │ (None, 2)                   │             258 │
+└──────────────────────────────────────┴─────────────────────────────┴─────────────────┘
+ Total params: 81,442 (318.13 KB)
+ Trainable params: 80,482 (314.38 KB)
+ Non-trainable params: 960 (3.75 KB)
+🚀 Training started...
+Epoch 1/10
+     25/Unknown 5s 142ms/step - accuracy: 0.5431 - loss: 0.8451Corrupt JPEG data: 65 extraneous bytes before marker 0xd9
+     28/Unknown 6s 142ms/step - accuracy: 0.5445 - loss: 0.8408Corrupt JPEG data: 162 extraneous bytes before marker 0xd9
+     45/Unknown 8s 141ms/step - accuracy: 0.5519 - loss: 0.8205Corrupt JPEG data: 1403 extraneous bytes before marker 0xd9
+    164/Unknown 25s 143ms/step - accuracy: 0.5661 - loss: 0.7684Corrupt JPEG data: 228 extraneous bytes before marker 0xd9
+    292/Unknown 44s 143ms/step - accuracy: 0.5771 - loss: 0.7405Corrupt JPEG data: 1153 extraneous bytes before marker 0xd9
+    299/Unknown 45s 143ms/step - accuracy: 0.5776 - loss: 0.7394Corrupt JPEG data: 99 extraneous bytes before marker 0xd9
+    491/Unknown 72s 143ms/step - accuracy: 0.5902 - loss: 0.7144Corrupt JPEG data: 239 extraneous bytes before marker 0xd9
+    508/Unknown 75s 143ms/step - accuracy: 0.5913 - loss: 0.7126Corrupt JPEG data: 214 extraneous bytes before marker 0xd9
+    620/Unknown 91s 144ms/step - accuracy: 0.5984 - loss: 0.70182026-02-05 21:22:16.489998: I tensorflow/core/framework/local_rendezvous.cc:407] Local rendezvous is aborting with status: OUT_OF_RANGE: End of sequence
+         [[{{node IteratorGetNext}}]]
+D:\SK\dog_cat_cnn_project\venv\Lib\site-packages\keras\src\trainers\epoch_iterator.py:164: UserWarning: Your input ran out of data; interrupting training. Make sure that your dataset or generator can generate at least `steps_per_epoch * epochs` batches. You may need to use the `.repeat()` function when building your dataset.
+  self._interrupted_warning()
+Corrupt JPEG data: 252 extraneous bytes before marker 0xd9
+Warning: unknown JFIF revision number 0.00
+Corrupt JPEG data: 396 extraneous bytes before marker 0xd9
+Corrupt JPEG data: 2226 extraneous bytes before marker 0xd9
+Corrupt JPEG data: 128 extraneous bytes before marker 0xd9
+2026-02-05 21:22:20.802802: I tensorflow/core/framework/local_rendezvous.cc:407] Local rendezvous is aborting with status: OUT_OF_RANGE: End of sequence
+         [[{{node IteratorGetNext}}]]
+620/620 ━━━━━━━━━━━━━━━━━━━━ 95s 151ms/step - accuracy: 0.6351 - loss: 0.6486 - val_accuracy: 0.6756 - val_loss: 0.6015
+Epoch 2/10
+  7/620 ━━━━━━━━━━━━━━━━━━━━ 1:32 151ms/step - accuracy: 0.6886 - loss: 0.5600Corrupt JPEG data: 65 extraneous bytes before marker 0xd9
+ 20/620 ━━━━━━━━━━━━━━━━━━━━ 1:28 148ms/step - accuracy: 0.7010 - loss: 0.5568Corrupt JPEG data: 162 extraneous bytes before marker 0xd9
+ 48/620 ━━━━━━━━━━━━━━━━━━━━ 1:23 146ms/step - accuracy: 0.7012 - loss: 0.5691Corrupt JPEG data: 1403 extraneous bytes before marker 0xd9
+152/620 ━━━━━━━━━━━━━━━━━━━━ 1:08 146ms/step - accuracy: 0.6902 - loss: 0.5869Corrupt JPEG data: 228 extraneous bytes before marker 0xd9
+288/620 ━━━━━━━━━━━━━━━━━━━━ 48s 146ms/step - accuracy: 0.6895 - loss: 0.5891Corrupt JPEG data: 1153 extraneous bytes before marker 0xd9
+298/620 ━━━━━━━━━━━━━━━━━━━━ 47s 146ms/step - accuracy: 0.6897 - loss: 0.5891Corrupt JPEG data: 99 extraneous bytes before marker 0xd9
+498/620 ━━━━━━━━━━━━━━━━━━━━ 17s 146ms/step - accuracy: 0.6940 - loss: 0.5857Corrupt JPEG data: 239 extraneous bytes before marker 0xd9
+513/620 ━━━━━━━━━━━━━━━━━━━━ 15s 146ms/step - accuracy: 0.6943 - loss: 0.5853Corrupt JPEG data: 214 extraneous bytes before marker 0xd9
+620/620 ━━━━━━━━━━━━━━━━━━━━ 0s 147ms/step - accuracy: 0.6968 - loss: 0.5826Corrupt JPEG data: 252 extraneous bytes before marker 0xd9
+Warning: unknown JFIF revision number 0.00
+Corrupt JPEG data: 396 extraneous bytes before marker 0xd9
+Corrupt JPEG data: 2226 extraneous bytes before marker 0xd9
+Corrupt JPEG data: 128 extraneous bytes before marker 0xd9
+2026-02-05 21:23:56.228193: I tensorflow/core/framework/local_rendezvous.cc:407] Local rendezvous is aborting with status: OUT_OF_RANGE: End of sequence
+         [[{{node IteratorGetNext}}]]
+620/620 ━━━━━━━━━━━━━━━━━━━━ 95s 154ms/step - accuracy: 0.7122 - loss: 0.5662 - val_accuracy: 0.7028 - val_loss: 0.5781
+Epoch 3/10
+Corrupt JPEG data: 65 extraneous bytes before marker 0xd9
+ 33/620 ━━━━━━━━━━━━━━━━━━━━ 1:26 148ms/step - accuracy: 0.7641 - loss: 0.4873Corrupt JPEG data: 162 extraneous bytes before marker 0xd9
+ 51/620 ━━━━━━━━━━━━━━━━━━━━ 1:23 147ms/step - accuracy: 0.7544 - loss: 0.5040Corrupt JPEG data: 1403 extraneous bytes before marker 0xd9
+150/620 ━━━━━━━━━━━━━━━━━━━━ 1:09 148ms/step - accuracy: 0.7364 - loss: 0.5314Corrupt JPEG data: 228 extraneous bytes before marker 0xd9
+290/620 ━━━━━━━━━━━━━━━━━━━━ 48s 147ms/step - accuracy: 0.7333 - loss: 0.5344Corrupt JPEG data: 1153 extraneous bytes before marker 0xd9
+293/620 ━━━━━━━━━━━━━━━━━━━━ 48s 147ms/step - accuracy: 0.7333 - loss: 0.5344Corrupt JPEG data: 99 extraneous bytes before marker 0xd9
+495/620 ━━━━━━━━━━━━━━━━━━━━ 18s 151ms/step - accuracy: 0.7350 - loss: 0.5320Corrupt JPEG data: 239 extraneous bytes before marker 0xd9
+507/620 ━━━━━━━━━━━━━━━━━━━━ 17s 152ms/step - accuracy: 0.7352 - loss: 0.5318Corrupt JPEG data: 214 extraneous bytes before marker 0xd9
+620/620 ━━━━━━━━━━━━━━━━━━━━ 0s 156ms/step - accuracy: 0.7368 - loss: 0.5297Corrupt JPEG data: 252 extraneous bytes before marker 0xd9
+Warning: unknown JFIF revision number 0.00
+Corrupt JPEG data: 396 extraneous bytes before marker 0xd9
+Corrupt JPEG data: 2226 extraneous bytes before marker 0xd9
+Corrupt JPEG data: 128 extraneous bytes before marker 0xd9
+620/620 ━━━━━━━━━━━━━━━━━━━━ 101s 163ms/step - accuracy: 0.7475 - loss: 0.5178 - val_accuracy: 0.6128 - val_loss: 0.7274
+Epoch 4/10
+ 10/620 ━━━━━━━━━━━━━━━━━━━━ 1:39 162ms/step - accuracy: 0.7870 - loss: 0.5164Corrupt JPEG data: 65 extraneous bytes before marker 0xd9
+ 28/620 ━━━━━━━━━━━━━━━━━━━━ 1:35 162ms/step - accuracy: 0.7832 - loss: 0.4959Corrupt JPEG data: 162 extraneous bytes before marker 0xd9
+ 44/620 ━━━━━━━━━━━━━━━━━━━━ 1:36 168ms/step - accuracy: 0.7819 - loss: 0.4929Corrupt JPEG data: 1403 extraneous bytes before marker 0xd9
+154/620 ━━━━━━━━━━━━━━━━━━━━ 1:15 163ms/step - accuracy: 0.7731 - loss: 0.4943Corrupt JPEG data: 228 extraneous bytes before marker 0xd9
+291/620 ━━━━━━━━━━━━━━━━━━━━ 53s 161ms/step - accuracy: 0.7708 - loss: 0.4939Corrupt JPEG data: 1153 extraneous bytes before marker 0xd9
+294/620 ━━━━━━━━━━━━━━━━━━━━ 52s 162ms/step - accuracy: 0.7707 - loss: 0.4938Corrupt JPEG data: 99 extraneous bytes before marker 0xd9
+491/620 ━━━━━━━━━━━━━━━━━━━━ 20s 161ms/step - accuracy: 0.7715 - loss: 0.4900Corrupt JPEG data: 239 extraneous bytes before marker 0xd9
+506/620 ━━━━━━━━━━━━━━━━━━━━ 18s 160ms/step - accuracy: 0.7717 - loss: 0.4896Corrupt JPEG data: 214 extraneous bytes before marker 0xd9
+620/620 ━━━━━━━━━━━━━━━━━━━━ 0s 161ms/step - accuracy: 0.7729 - loss: 0.4872Corrupt JPEG data: 252 extraneous bytes before marker 0xd9
+Warning: unknown JFIF revision number 0.00
+Corrupt JPEG data: 396 extraneous bytes before marker 0xd9
+Corrupt JPEG data: 128 extraneous bytes before marker 0xd9
+Corrupt JPEG data: 2226 extraneous bytes before marker 0xd9
+2026-02-05 21:27:21.501441: I tensorflow/core/framework/local_rendezvous.cc:407] Local rendezvous is aborting with status: OUT_OF_RANGE: End of sequence
+         [[{{node IteratorGetNext}}]]
+620/620 ━━━━━━━━━━━━━━━━━━━━ 104s 168ms/step - accuracy: 0.7799 - loss: 0.4742 - val_accuracy: 0.6718 - val_loss: 0.6417
+Epoch 5/10
+Corrupt JPEG data: 65 extraneous bytes before marker 0xd9
+ 22/620 ━━━━━━━━━━━━━━━━━━━━ 1:37 163ms/step - accuracy: 0.8194 - loss: 0.4173Corrupt JPEG data: 162 extraneous bytes before marker 0xd9
+ 45/620 ━━━━━━━━━━━━━━━━━━━━ 1:33 163ms/step - accuracy: 0.8069 - loss: 0.4349Corrupt JPEG data: 1403 extraneous bytes before marker 0xd9
+150/620 ━━━━━━━━━━━━━━━━━━━━ 1:15 162ms/step - accuracy: 0.7986 - loss: 0.4441Corrupt JPEG data: 228 extraneous bytes before marker 0xd9
+288/620 ━━━━━━━━━━━━━━━━━━━━ 53s 162ms/step - accuracy: 0.7955 - loss: 0.4469Corrupt JPEG data: 1153 extraneous bytes before marker 0xd9
+295/620 ━━━━━━━━━━━━━━━━━━━━ 52s 162ms/step - accuracy: 0.7955 - loss: 0.4469Corrupt JPEG data: 99 extraneous bytes before marker 0xd9
+506/620 ━━━━━━━━━━━━━━━━━━━━ 18s 162ms/step - accuracy: 0.7967 - loss: 0.4431Corrupt JPEG data: 239 extraneous bytes before marker 0xd9
+513/620 ━━━━━━━━━━━━━━━━━━━━ 17s 162ms/step - accuracy: 0.7967 - loss: 0.4429Corrupt JPEG data: 214 extraneous bytes before marker 0xd9
+620/620 ━━━━━━━━━━━━━━━━━━━━ 0s 162ms/step - accuracy: 0.7980 - loss: 0.4406Corrupt JPEG data: 252 extraneous bytes before marker 0xd9
+Warning: unknown JFIF revision number 0.00
+Corrupt JPEG data: 396 extraneous bytes before marker 0xd9
+Corrupt JPEG data: 2226 extraneous bytes before marker 0xd9
+Corrupt JPEG data: 128 extraneous bytes before marker 0xd9
+620/620 ━━━━━━━━━━━━━━━━━━━━ 105s 169ms/step - accuracy: 0.8048 - loss: 0.4271 - val_accuracy: 0.8104 - val_loss: 0.4281
+Epoch 6/10
+ 21/620 ━━━━━━━━━━━━━━━━━━━━ 1:38 165ms/step - accuracy: 0.8064 - loss: 0.4123Corrupt JPEG data: 162 extraneous bytes before marker 0xd9
+ 24/620 ━━━━━━━━━━━━━━━━━━━━ 1:37 164ms/step - accuracy: 0.8081 - loss: 0.4102Corrupt JPEG data: 65 extraneous bytes before marker 0xd9
+ 46/620 ━━━━━━━━━━━━━━━━━━━━ 1:33 163ms/step - accuracy: 0.8127 - loss: 0.4051Corrupt JPEG data: 1403 extraneous bytes before marker 0xd9
+166/620 ━━━━━━━━━━━━━━━━━━━━ 1:17 172ms/step - accuracy: 0.8187 - loss: 0.4003Corrupt JPEG data: 228 extraneous bytes before marker 0xd9
+286/620 ━━━━━━━━━━━━━━━━━━━━ 56s 170ms/step - accuracy: 0.8213 - loss: 0.3975Corrupt JPEG data: 1153 extraneous bytes before marker 0xd9
+289/620 ━━━━━━━━━━━━━━━━━━━━ 56s 170ms/step - accuracy: 0.8213 - loss: 0.3974Corrupt JPEG data: 99 extraneous bytes before marker 0xd9
+489/620 ━━━━━━━━━━━━━━━━━━━━ 21s 167ms/step - accuracy: 0.8243 - loss: 0.3925Corrupt JPEG data: 239 extraneous bytes before marker 0xd9
+521/620 ━━━━━━━━━━━━━━━━━━━━ 16s 167ms/step - accuracy: 0.8248 - loss: 0.3915Corrupt JPEG data: 214 extraneous bytes before marker 0xd9
+620/620 ━━━━━━━━━━━━━━━━━━━━ 0s 166ms/step - accuracy: 0.8263 - loss: 0.3889Corrupt JPEG data: 252 extraneous bytes before marker 0xd9
+Corrupt JPEG data: 396 extraneous bytes before marker 0xd9
+Warning: unknown JFIF revision number 0.00
+Corrupt JPEG data: 2226 extraneous bytes before marker 0xd9
+Corrupt JPEG data: 128 extraneous bytes before marker 0xd9
+620/620 ━━━━━━━━━━━━━━━━━━━━ 107s 173ms/step - accuracy: 0.8346 - loss: 0.3728 - val_accuracy: 0.7674 - val_loss: 0.5061
+Epoch 7/10
+Corrupt JPEG data: 65 extraneous bytes before marker 0xd9
+ 30/620 ━━━━━━━━━━━━━━━━━━━━ 1:35 162ms/step - accuracy: 0.8700 - loss: 0.3352Corrupt JPEG data: 162 extraneous bytes before marker 0xd9
+ 41/620 ━━━━━━━━━━━━━━━━━━━━ 1:34 163ms/step - accuracy: 0.8664 - loss: 0.3370Corrupt JPEG data: 1403 extraneous bytes before marker 0xd9
+148/620 ━━━━━━━━━━━━━━━━━━━━ 1:16 163ms/step - accuracy: 0.8530 - loss: 0.3466Corrupt JPEG data: 228 extraneous bytes before marker 0xd9
+290/620 ━━━━━━━━━━━━━━━━━━━━ 53s 162ms/step - accuracy: 0.8514 - loss: 0.3451Corrupt JPEG data: 1153 extraneous bytes before marker 0xd9
+301/620 ━━━━━━━━━━━━━━━━━━━━ 51s 162ms/step - accuracy: 0.8512 - loss: 0.3452Corrupt JPEG data: 99 extraneous bytes before marker 0xd9
+491/620 ━━━━━━━━━━━━━━━━━━━━ 20s 161ms/step - accuracy: 0.8508 - loss: 0.3436Corrupt JPEG data: 239 extraneous bytes before marker 0xd9
+505/620 ━━━━━━━━━━━━━━━━━━━━ 18s 161ms/step - accuracy: 0.8509 - loss: 0.3434Corrupt JPEG data: 214 extraneous bytes before marker 0xd9
+620/620 ━━━━━━━━━━━━━━━━━━━━ 0s 162ms/step - accuracy: 0.8514 - loss: 0.3417Corrupt JPEG data: 252 extraneous bytes before marker 0xd9
+Warning: unknown JFIF revision number 0.00
+Corrupt JPEG data: 396 extraneous bytes before marker 0xd9
+Corrupt JPEG data: 2226 extraneous bytes before marker 0xd9
+Corrupt JPEG data: 128 extraneous bytes before marker 0xd9
+620/620 ━━━━━━━━━━━━━━━━━━━━ 105s 170ms/step - accuracy: 0.8555 - loss: 0.3329 - val_accuracy: 0.7413 - val_loss: 0.6042
+Epoch 8/10
+  4/620 ━━━━━━━━━━━━━━━━━━━━ 1:40 164ms/step - accuracy: 0.8607 - loss: 0.3464Corrupt JPEG data: 65 extraneous bytes before marker 0xd9
+ 28/620 ━━━━━━━━━━━━━━━━━━━━ 1:35 161ms/step - accuracy: 0.8705 - loss: 0.3145Corrupt JPEG data: 162 extraneous bytes before marker 0xd9
+ 50/620 ━━━━━━━━━━━━━━━━━━━━ 1:31 161ms/step - accuracy: 0.8705 - loss: 0.3115Corrupt JPEG data: 1403 extraneous bytes before marker 0xd9
+153/620 ━━━━━━━━━━━━━━━━━━━━ 1:15 161ms/step - accuracy: 0.8694 - loss: 0.3106Corrupt JPEG data: 228 extraneous bytes before marker 0xd9
+286/620 ━━━━━━━━━━━━━━━━━━━━ 54s 162ms/step - accuracy: 0.8695 - loss: 0.3079Corrupt JPEG data: 1153 extraneous bytes before marker 0xd9
+291/620 ━━━━━━━━━━━━━━━━━━━━ 53s 162ms/step - accuracy: 0.8695 - loss: 0.3078Corrupt JPEG data: 99 extraneous bytes before marker 0xd9
+498/620 ━━━━━━━━━━━━━━━━━━━━ 19s 162ms/step - accuracy: 0.8707 - loss: 0.3040Corrupt JPEG data: 239 extraneous bytes before marker 0xd9
+523/620 ━━━━━━━━━━━━━━━━━━━━ 15s 162ms/step - accuracy: 0.8709 - loss: 0.3035Corrupt JPEG data: 214 extraneous bytes before marker 0xd9
+620/620 ━━━━━━━━━━━━━━━━━━━━ 0s 162ms/step - accuracy: 0.8715 - loss: 0.3017Corrupt JPEG data: 252 extraneous bytes before marker 0xd9
+Warning: unknown JFIF revision number 0.00
+Corrupt JPEG data: 396 extraneous bytes before marker 0xd9
+Corrupt JPEG data: 2226 extraneous bytes before marker 0xd9
+Corrupt JPEG data: 128 extraneous bytes before marker 0xd9
+2026-02-05 21:34:23.877207: I tensorflow/core/framework/local_rendezvous.cc:407] Local rendezvous is aborting with status: OUT_OF_RANGE: End of sequence
+         [[{{node IteratorGetNext}}]]
+620/620 ━━━━━━━━━━━━━━━━━━━━ 105s 169ms/step - accuracy: 0.8755 - loss: 0.2905 - val_accuracy: 0.8264 - val_loss: 0.4110
+Epoch 9/10
+Corrupt JPEG data: 65 extraneous bytes before marker 0xd9
+ 21/620 ━━━━━━━━━━━━━━━━━━━━ 1:36 161ms/step - accuracy: 0.8833 - loss: 0.2671Corrupt JPEG data: 162 extraneous bytes before marker 0xd9
+ 45/620 ━━━━━━━━━━━━━━━━━━━━ 1:33 163ms/step - accuracy: 0.8792 - loss: 0.2828Corrupt JPEG data: 1403 extraneous bytes before marker 0xd9
+153/620 ━━━━━━━━━━━━━━━━━━━━ 1:15 162ms/step - accuracy: 0.8751 - loss: 0.2885Corrupt JPEG data: 228 extraneous bytes before marker 0xd9
+286/620 ━━━━━━━━━━━━━━━━━━━━ 54s 162ms/step - accuracy: 0.8772 - loss: 0.2851Corrupt JPEG data: 1153 extraneous bytes before marker 0xd9
+306/620 ━━━━━━━━━━━━━━━━━━━━ 50s 162ms/step - accuracy: 0.8776 - loss: 0.2845Corrupt JPEG data: 99 extraneous bytes before marker 0xd9
+491/620 ━━━━━━━━━━━━━━━━━━━━ 20s 162ms/step - accuracy: 0.8802 - loss: 0.2797Corrupt JPEG data: 239 extraneous bytes before marker 0xd9
+506/620 ━━━━━━━━━━━━━━━━━━━━ 18s 162ms/step - accuracy: 0.8804 - loss: 0.2793Corrupt JPEG data: 214 extraneous bytes before marker 0xd9
+620/620 ━━━━━━━━━━━━━━━━━━━━ 0s 162ms/step - accuracy: 0.8815 - loss: 0.2774Corrupt JPEG data: 252 extraneous bytes before marker 0xd9
+Warning: unknown JFIF revision number 0.00
+Corrupt JPEG data: 396 extraneous bytes before marker 0xd9
+Corrupt JPEG data: 2226 extraneous bytes before marker 0xd9
+Corrupt JPEG data: 128 extraneous bytes before marker 0xd9
+620/620 ━━━━━━━━━━━━━━━━━━━━ 105s 169ms/step - accuracy: 0.8871 - loss: 0.2678 - val_accuracy: 0.8699 - val_loss: 0.3058
+Epoch 10/10
+Corrupt JPEG data: 65 extraneous bytes before marker 0xd9
+ 36/620 ━━━━━━━━━━━━━━━━━━━━ 1:33 161ms/step - accuracy: 0.9139 - loss: 0.2260Corrupt JPEG data: 162 extraneous bytes before marker 0xd9
+ 48/620 ━━━━━━━━━━━━━━━━━━━━ 1:31 161ms/step - accuracy: 0.9107 - loss: 0.2295Corrupt JPEG data: 1403 extraneous bytes before marker 0xd9
+147/620 ━━━━━━━━━━━━━━━━━━━━ 1:16 161ms/step - accuracy: 0.8957 - loss: 0.2549Corrupt JPEG data: 228 extraneous bytes before marker 0xd9
+286/620 ━━━━━━━━━━━━━━━━━━━━ 53s 161ms/step - accuracy: 0.8919 - loss: 0.2606Corrupt JPEG data: 1153 extraneous bytes before marker 0xd9
+292/620 ━━━━━━━━━━━━━━━━━━━━ 52s 161ms/step - accuracy: 0.8919 - loss: 0.2607Corrupt JPEG data: 99 extraneous bytes before marker 0xd9
+488/620 ━━━━━━━━━━━━━━━━━━━━ 21s 162ms/step - accuracy: 0.8916 - loss: 0.2595Corrupt JPEG data: 239 extraneous bytes before marker 0xd9
+514/620 ━━━━━━━━━━━━━━━━━━━━ 17s 162ms/step - accuracy: 0.8916 - loss: 0.2592Corrupt JPEG data: 214 extraneous bytes before marker 0xd9
+620/620 ━━━━━━━━━━━━━━━━━━━━ 0s 162ms/step - accuracy: 0.8917 - loss: 0.2584Corrupt JPEG data: 252 extraneous bytes before marker 0xd9
+Warning: unknown JFIF revision number 0.00
+Corrupt JPEG data: 396 extraneous bytes before marker 0xd9
+Corrupt JPEG data: 128 extraneous bytes before marker 0xd9
+Corrupt JPEG data: 2226 extraneous bytes before marker 0xd9
+620/620 ━━━━━━━━━━━━━━━━━━━━ 105s 169ms/step - accuracy: 0.8923 - loss: 0.2542 - val_accuracy: 0.8884 - val_loss: 0.2726
+✅ Model saved at D:\SK\dog_cat_cnn_project\experiments\v1_baseline\model\v1_model.keras
+📊 Training graph saved at D:\SK\dog_cat_cnn_project\experiments\v1_baseline\plots\training_accuracy.png
+📝 Experiment notes saved!
+(venv) PS D:\SK\dog_cat_cnn_project\src> python evaluate.py
+2026-02-05 21:39:40.967774: I tensorflow/core/util/port.cc:153] oneDNN custom operations are on. You may see slightly different numerical results due to floating-point round-off errors from different computation orders. To turn them off, set the environment variable `TF_ENABLE_ONEDNN_OPTS=0`.
+2026-02-05 21:39:42.874752: I tensorflow/core/util/port.cc:153] oneDNN custom operations are on. You may see slightly different numerical results due to floating-point round-off errors from different computation orders. To turn them off, set the environment variable `TF_ENABLE_ONEDNN_OPTS=0`.
+📦 Loading trained V1 model...
+2026-02-05 21:39:44.602964: I tensorflow/core/platform/cpu_feature_guard.cc:210] This TensorFlow binary is optimized to use available CPU instructions in performance-critical operations.
+To enable the following instructions: SSE3 SSE4.1 SSE4.2 AVX AVX2 AVX_VNNI FMA, in other operations, rebuild TensorFlow with the appropriate compiler flags.      
+📂 Loading validation dataset...
+Found 5000 files belonging to 2 classes.
+WARNING:tensorflow:From D:\SK\dog_cat_cnn_project\src\data_loader.py:41: ignore_errors (from tensorflow.python.data.experimental.ops.error_ops) is deprecated and will be removed in a future version.
+Instructions for updating:
+Use `tf.data.Dataset.ignore_errors` instead.
+🔍 Running predictions...
+1/1 ━━━━━━━━━━━━━━━━━━━━ 0s 138ms/step
+1/1 ━━━━━━━━━━━━━━━━━━━━ 0s 51ms/step
+1/1 ━━━━━━━━━━━━━━━━━━━━ 0s 47ms/step
+1/1 ━━━━━━━━━━━━━━━━━━━━ 0s 46ms/step
+1/1 ━━━━━━━━━━━━━━━━━━━━ 0s 52ms/step
+1/1 ━━━━━━━━━━━━━━━━━━━━ 0s 45ms/step
+1/1 ━━━━━━━━━━━━━━━━━━━━ 0s 42ms/step
+1/1 ━━━━━━━━━━━━━━━━━━━━ 0s 48ms/step
+Corrupt JPEG data: 128 extraneous bytes before marker 0xd9
+1/1 ━━━━━━━━━━━━━━━━━━━━ 0s 53ms/step
+1/1 ━━━━━━━━━━━━━━━━━━━━ 0s 48ms/step
+1/1 ━━━━━━━━━━━━━━━━━━━━ 0s 47ms/step
+1/1 ━━━━━━━━━━━━━━━━━━━━ 0s 44ms/step
+1/1 ━━━━━━━━━━━━━━━━━━━━ 0s 49ms/step
+1/1 ━━━━━━━━━━━━━━━━━━━━ 0s 31ms/step
+1/1 ━━━━━━━━━━━━━━━━━━━━ 0s 50ms/step
+1/1 ━━━━━━━━━━━━━━━━━━━━ 0s 57ms/step
+1/1 ━━━━━━━━━━━━━━━━━━━━ 0s 47ms/step
+1/1 ━━━━━━━━━━━━━━━━━━━━ 0s 46ms/step
+1/1 ━━━━━━━━━━━━━━━━━━━━ 0s 50ms/step
+1/1 ━━━━━━━━━━━━━━━━━━━━ 0s 49ms/step
+1/1 ━━━━━━━━━━━━━━━━━━━━ 0s 53ms/step
+1/1 ━━━━━━━━━━━━━━━━━━━━ 0s 46ms/step
+1/1 ━━━━━━━━━━━━━━━━━━━━ 0s 45ms/step
+1/1 ━━━━━━━━━━━━━━━━━━━━ 0s 44ms/step
+1/1 ━━━━━━━━━━━━━━━━━━━━ 0s 41ms/step
+1/1 ━━━━━━━━━━━━━━━━━━━━ 0s 47ms/step
+1/1 ━━━━━━━━━━━━━━━━━━━━ 0s 47ms/step
+1/1 ━━━━━━━━━━━━━━━━━━━━ 0s 53ms/step
+1/1 ━━━━━━━━━━━━━━━━━━━━ 0s 33ms/step
+1/1 ━━━━━━━━━━━━━━━━━━━━ 0s 54ms/step
+1/1 ━━━━━━━━━━━━━━━━━━━━ 0s 48ms/step
+1/1 ━━━━━━━━━━━━━━━━━━━━ 0s 46ms/step
+1/1 ━━━━━━━━━━━━━━━━━━━━ 0s 49ms/step
+Corrupt JPEG data: 396 extraneous bytes before marker 0xd9
+1/1 ━━━━━━━━━━━━━━━━━━━━ 0s 46ms/step
+1/1 ━━━━━━━━━━━━━━━━━━━━ 0s 55ms/step
+1/1 ━━━━━━━━━━━━━━━━━━━━ 0s 46ms/step
+1/1 ━━━━━━━━━━━━━━━━━━━━ 0s 34ms/step
+1/1 ━━━━━━━━━━━━━━━━━━━━ 0s 45ms/step
+1/1 ━━━━━━━━━━━━━━━━━━━━ 0s 51ms/step
+1/1 ━━━━━━━━━━━━━━━━━━━━ 0s 45ms/step
+1/1 ━━━━━━━━━━━━━━━━━━━━ 0s 45ms/step
+1/1 ━━━━━━━━━━━━━━━━━━━━ 0s 49ms/step
+1/1 ━━━━━━━━━━━━━━━━━━━━ 0s 54ms/step
+1/1 ━━━━━━━━━━━━━━━━━━━━ 0s 43ms/step
+1/1 ━━━━━━━━━━━━━━━━━━━━ 0s 42ms/step
+1/1 ━━━━━━━━━━━━━━━━━━━━ 0s 34ms/step
+1/1 ━━━━━━━━━━━━━━━━━━━━ 0s 48ms/step
+1/1 ━━━━━━━━━━━━━━━━━━━━ 0s 50ms/step
+1/1 ━━━━━━━━━━━━━━━━━━━━ 0s 46ms/step
+1/1 ━━━━━━━━━━━━━━━━━━━━ 0s 60ms/step
+1/1 ━━━━━━━━━━━━━━━━━━━━ 0s 43ms/step
+1/1 ━━━━━━━━━━━━━━━━━━━━ 0s 50ms/step
+1/1 ━━━━━━━━━━━━━━━━━━━━ 0s 32ms/step
+1/1 ━━━━━━━━━━━━━━━━━━━━ 0s 50ms/step
+1/1 ━━━━━━━━━━━━━━━━━━━━ 0s 54ms/step
+1/1 ━━━━━━━━━━━━━━━━━━━━ 0s 53ms/step
+1/1 ━━━━━━━━━━━━━━━━━━━━ 0s 45ms/step
+1/1 ━━━━━━━━━━━━━━━━━━━━ 0s 55ms/step
+1/1 ━━━━━━━━━━━━━━━━━━━━ 0s 44ms/step
+1/1 ━━━━━━━━━━━━━━━━━━━━ 0s 65ms/step
+1/1 ━━━━━━━━━━━━━━━━━━━━ 0s 44ms/step
+1/1 ━━━━━━━━━━━━━━━━━━━━ 0s 51ms/step
+1/1 ━━━━━━━━━━━━━━━━━━━━ 0s 33ms/step
+1/1 ━━━━━━━━━━━━━━━━━━━━ 0s 47ms/step
+1/1 ━━━━━━━━━━━━━━━━━━━━ 0s 44ms/step
+1/1 ━━━━━━━━━━━━━━━━━━━━ 0s 50ms/step
+1/1 ━━━━━━━━━━━━━━━━━━━━ 0s 52ms/step
+1/1 ━━━━━━━━━━━━━━━━━━━━ 0s 47ms/step
+1/1 ━━━━━━━━━━━━━━━━━━━━ 0s 50ms/step
+1/1 ━━━━━━━━━━━━━━━━━━━━ 0s 47ms/step
+1/1 ━━━━━━━━━━━━━━━━━━━━ 0s 56ms/step
+1/1 ━━━━━━━━━━━━━━━━━━━━ 0s 54ms/step
+1/1 ━━━━━━━━━━━━━━━━━━━━ 0s 45ms/step
+1/1 ━━━━━━━━━━━━━━━━━━━━ 0s 43ms/step
+1/1 ━━━━━━━━━━━━━━━━━━━━ 0s 46ms/step
+1/1 ━━━━━━━━━━━━━━━━━━━━ 0s 45ms/step
+1/1 ━━━━━━━━━━━━━━━━━━━━ 0s 53ms/step
+1/1 ━━━━━━━━━━━━━━━━━━━━ 0s 46ms/step
+1/1 ━━━━━━━━━━━━━━━━━━━━ 0s 45ms/step
+1/1 ━━━━━━━━━━━━━━━━━━━━ 0s 34ms/step
+1/1 ━━━━━━━━━━━━━━━━━━━━ 0s 46ms/step
+1/1 ━━━━━━━━━━━━━━━━━━━━ 0s 62ms/step
+1/1 ━━━━━━━━━━━━━━━━━━━━ 0s 62ms/step
+1/1 ━━━━━━━━━━━━━━━━━━━━ 0s 38ms/step
+1/1 ━━━━━━━━━━━━━━━━━━━━ 0s 49ms/step
+1/1 ━━━━━━━━━━━━━━━━━━━━ 0s 47ms/step
+Corrupt JPEG data: 2226 extraneous bytes before marker 0xd9
+1/1 ━━━━━━━━━━━━━━━━━━━━ 0s 43ms/step
+1/1 ━━━━━━━━━━━━━━━━━━━━ 0s 39ms/step
+1/1 ━━━━━━━━━━━━━━━━━━━━ 0s 48ms/step
+1/1 ━━━━━━━━━━━━━━━━━━━━ 0s 50ms/step
+1/1 ━━━━━━━━━━━━━━━━━━━━ 0s 56ms/step
+1/1 ━━━━━━━━━━━━━━━━━━━━ 0s 44ms/step
+1/1 ━━━━━━━━━━━━━━━━━━━━ 0s 53ms/step
+1/1 ━━━━━━━━━━━━━━━━━━━━ 0s 46ms/step
+1/1 ━━━━━━━━━━━━━━━━━━━━ 0s 41ms/step
+1/1 ━━━━━━━━━━━━━━━━━━━━ 0s 57ms/step
+1/1 ━━━━━━━━━━━━━━━━━━━━ 0s 58ms/step
+1/1 ━━━━━━━━━━━━━━━━━━━━ 0s 53ms/step
+1/1 ━━━━━━━━━━━━━━━━━━━━ 0s 50ms/step
+1/1 ━━━━━━━━━━━━━━━━━━━━ 0s 38ms/step
+1/1 ━━━━━━━━━━━━━━━━━━━━ 0s 48ms/step
+1/1 ━━━━━━━━━━━━━━━━━━━━ 0s 45ms/step
+1/1 ━━━━━━━━━━━━━━━━━━━━ 0s 49ms/step
+1/1 ━━━━━━━━━━━━━━━━━━━━ 0s 45ms/step
+1/1 ━━━━━━━━━━━━━━━━━━━━ 0s 45ms/step
+1/1 ━━━━━━━━━━━━━━━━━━━━ 0s 51ms/step
+1/1 ━━━━━━━━━━━━━━━━━━━━ 0s 44ms/step
+1/1 ━━━━━━━━━━━━━━━━━━━━ 0s 51ms/step
+1/1 ━━━━━━━━━━━━━━━━━━━━ 0s 44ms/step
+1/1 ━━━━━━━━━━━━━━━━━━━━ 0s 49ms/step
+1/1 ━━━━━━━━━━━━━━━━━━━━ 0s 50ms/step
+1/1 ━━━━━━━━━━━━━━━━━━━━ 0s 44ms/step
+1/1 ━━━━━━━━━━━━━━━━━━━━ 0s 53ms/step
+1/1 ━━━━━━━━━━━━━━━━━━━━ 0s 34ms/step
+1/1 ━━━━━━━━━━━━━━━━━━━━ 0s 52ms/step
+1/1 ━━━━━━━━━━━━━━━━━━━━ 0s 49ms/step
+1/1 ━━━━━━━━━━━━━━━━━━━━ 0s 51ms/step
+1/1 ━━━━━━━━━━━━━━━━━━━━ 0s 55ms/step
+1/1 ━━━━━━━━━━━━━━━━━━━━ 0s 49ms/step
+1/1 ━━━━━━━━━━━━━━━━━━━━ 0s 47ms/step
+1/1 ━━━━━━━━━━━━━━━━━━━━ 0s 46ms/step
+1/1 ━━━━━━━━━━━━━━━━━━━━ 0s 55ms/step
+Corrupt JPEG data: 252 extraneous bytes before marker 0xd9
+1/1 ━━━━━━━━━━━━━━━━━━━━ 0s 45ms/step
+1/1 ━━━━━━━━━━━━━━━━━━━━ 0s 44ms/step
+1/1 ━━━━━━━━━━━━━━━━━━━━ 0s 44ms/step
+1/1 ━━━━━━━━━━━━━━━━━━━━ 0s 60ms/step
+1/1 ━━━━━━━━━━━━━━━━━━━━ 0s 51ms/step
+1/1 ━━━━━━━━━━━━━━━━━━━━ 0s 57ms/step
+1/1 ━━━━━━━━━━━━━━━━━━━━ 0s 49ms/step
+1/1 ━━━━━━━━━━━━━━━━━━━━ 0s 56ms/step
+1/1 ━━━━━━━━━━━━━━━━━━━━ 0s 30ms/step
+1/1 ━━━━━━━━━━━━━━━━━━━━ 0s 45ms/step
+1/1 ━━━━━━━━━━━━━━━━━━━━ 0s 45ms/step
+1/1 ━━━━━━━━━━━━━━━━━━━━ 0s 47ms/step
+Warning: unknown JFIF revision number 0.00
+1/1 ━━━━━━━━━━━━━━━━━━━━ 0s 33ms/step
+1/1 ━━━━━━━━━━━━━━━━━━━━ 0s 57ms/step
+1/1 ━━━━━━━━━━━━━━━━━━━━ 0s 55ms/step
+1/1 ━━━━━━━━━━━━━━━━━━━━ 0s 53ms/step
+1/1 ━━━━━━━━━━━━━━━━━━━━ 0s 44ms/step
+1/1 ━━━━━━━━━━━━━━━━━━━━ 0s 49ms/step
+1/1 ━━━━━━━━━━━━━━━━━━━━ 0s 33ms/step
+1/1 ━━━━━━━━━━━━━━━━━━━━ 0s 59ms/step
+1/1 ━━━━━━━━━━━━━━━━━━━━ 0s 55ms/step
+1/1 ━━━━━━━━━━━━━━━━━━━━ 0s 45ms/step
+1/1 ━━━━━━━━━━━━━━━━━━━━ 0s 43ms/step
+1/1 ━━━━━━━━━━━━━━━━━━━━ 0s 50ms/step
+1/1 ━━━━━━━━━━━━━━━━━━━━ 0s 43ms/step
+1/1 ━━━━━━━━━━━━━━━━━━━━ 0s 49ms/step
+1/1 ━━━━━━━━━━━━━━━━━━━━ 0s 68ms/step
+1/1 ━━━━━━━━━━━━━━━━━━━━ 0s 43ms/step
+1/1 ━━━━━━━━━━━━━━━━━━━━ 0s 50ms/step
+1/1 ━━━━━━━━━━━━━━━━━━━━ 0s 60ms/step
+1/1 ━━━━━━━━━━━━━━━━━━━━ 0s 45ms/step
+1/1 ━━━━━━━━━━━━━━━━━━━━ 0s 45ms/step
+1/1 ━━━━━━━━━━━━━━━━━━━━ 0s 127ms/step
+2026-02-05 21:39:57.056401: I tensorflow/core/framework/local_rendezvous.cc:407] Local rendezvous is aborting with status: OUT_OF_RANGE: End of sequence
+🧩 Confusion matrix saved at D:\SK\dog_cat_cnn_project\experiments\v1_baseline\plots\confusion_matrix.png
+
+Classification Report:
+
+              precision    recall  f1-score   support
+
+         Cat       0.91      0.87      0.89      2473
+         Dog       0.87      0.91      0.89      2463
+
+    accuracy                           0.89      4936
+   macro avg       0.89      0.89      0.89      4936
+weighted avg       0.89      0.89      0.89      4936
+
+📄 Classification report saved at D:\SK\dog_cat_cnn_project\experiments\v1_baseline\metrics\classification_report.txt
+📈 Accuracy metric saved at D:\SK\dog_cat_cnn_project\experiments\v1_baseline\metrics\metrics.txt

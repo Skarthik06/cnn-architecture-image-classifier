@@ -1,0 +1,10 @@
+V3 TRANSFER LEARNING CLASSIFICATION REPORT
+
+              precision    recall  f1-score   support
+
+         Cat       0.96      0.98      0.97      2469
+         Dog       0.98      0.96      0.97      2467
+
+    accuracy                           0.97      4936
+   macro avg       0.97      0.97      0.97      4936
+weighted avg       0.97      0.97      0.97      4936
